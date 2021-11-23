@@ -1,0 +1,913 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "description": "SwaggerHub API Auto Mocking",
+      "url": "https://virtserver.swaggerhub.com/guibirow/Yumido/v1"
+    }
+  ],
+  "info": {
+    "description": "This is an API to manage DOMAIN in the restaurants",
+    "version": "v1",
+    "title": "DOMAIN API",
+    "contact": {
+      "email": "stacks@amido.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "DOMAIN",
+      "description": "DOMAIN related operations"
+    },
+    {
+      "name": "Category",
+      "description": "Catalog related operations"
+    },
+    {
+      "name": "Item",
+      "description": "Item relate operations"
+    }
+  ],
+  "paths": {
+    "/domain/": {
+      "get": {
+        "tags": [
+          "DOMAIN"
+        ],
+        "summary": "Get or search a list of domains",
+        "operationId": "searchDOMAIN",
+        "description": "By passing in the appropriate options, you can search for\navailable domains in the system\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "description": "pass an optional search string for looking up domains",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "description": "number of records to skip for pagination",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "maximum number of records to return",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "maximum": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DOMAIN"
+        ],
+        "summary": "Create a domain",
+        "operationId": "addDOMAIN",
+        "description": "Adds a domain",
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/ConflictItemExists"
+          }
+        },
+        "requestBody": {
+          "description": "DOMAIN being added",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateDOMAIN"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/domain/{id}": {
+      "get": {
+        "tags": [
+          "DOMAIN"
+        ],
+        "summary": "Get a domain",
+        "operationId": "getDOMAIN",
+        "description": "By passing the domain id, you can get access to\navailable categories and items in the domain\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DOMAIN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DOMAIN"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "DOMAIN"
+        ],
+        "summary": "Update a domain",
+        "operationId": "updateDOMAIN",
+        "description": "Update a domain with new information",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "requestBody": {
+          "description": "DOMAIN being updated",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateDOMAIN"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DOMAIN"
+        ],
+        "summary": "Removes a domain with all its categories and items",
+        "operationId": "deleteDOMAIN",
+        "description": "Remove a domain from a restaurant",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/domain/{id}/category/": {
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Create a category in the domain",
+        "operationId": "addDOMAINCategory",
+        "description": "Adds a category to domain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/ConflictItemExists"
+          }
+        },
+        "requestBody": {
+          "description": "Category being added",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateCategory"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/domain/{id}/category/{categoryId}": {
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Update a category in the domain",
+        "operationId": "updateDOMAINCategory",
+        "description": "Update a category to domain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id for Category being removed",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/ConflictItemExists"
+          }
+        },
+        "requestBody": {
+          "description": "Category being added",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateCategory"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "summary": "Removes a category and its items from domain",
+        "operationId": "deleteCategory",
+        "description": "Removes a category and its items from domain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id for Category being removed",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/domain/{id}/category/{categoryId}/items/": {
+      "post": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Create an item to a category in the domain",
+        "operationId": "addDOMAINItem",
+        "description": "Adds a new item to a category in the domain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id for Category being removed",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/ConflictItemExists"
+          }
+        },
+        "requestBody": {
+          "description": "Category being added",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateDOMAINItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/domain/{id}/category/{categoryId}/items/{itemId}": {
+      "put": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Update an item in the domain",
+        "operationId": "updateDOMAINItem",
+        "description": "Update an  item in the domain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Id for domain",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id for Category",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "description": "Id for item being updated",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/ConflictItemExists"
+          }
+        },
+        "requestBody": {
+          "description": "Category being added",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateDOMAINItem"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Item"
+        ],
+        "summary": "Removes an item from domain",
+        "operationId": "deleteDOMAINItem",
+        "description": "Removes an item from domain",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "domain id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Category ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "description": "Id for Item being removed",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "security": [
+          {
+            "OpenID": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/NoContent"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchResult": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "example": 10
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int32",
+            "example": 0
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResultItem"
+            }
+          }
+        }
+      },
+      "SearchResultItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Lunch DOMAIN"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious food selection for lunch. Available mon to fri from 11am to 4pm"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DOMAIN": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "categories",
+          "enabled"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Lunch DOMAIN"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious food selection for lunch. Available mon to fri from 11am to 4pm"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Category"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "items"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Burguers"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious selection of burguers"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DOMAINItem"
+            }
+          }
+        }
+      },
+      "DOMAINItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "price",
+          "available"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "CheeseBurguer"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious patty covered with melted cheddar"
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "example": "1.50"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateOrUpdateDOMAIN": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "enabled"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Lunch DOMAIN"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious food selection for lunch. Available mon to fri from 11am to 4pm"
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateOrUpdateCategory": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Burguers"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious selection of burguers"
+          }
+        }
+      },
+      "CreateOrUpdateDOMAINItem": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "available"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "CheeseBurguer"
+          },
+          "description": {
+            "type": "string",
+            "example": "A delicious patty covered with melted cheddar"
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "example": "1.50"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "responses": {
+      "Accepted": {
+        "description": "Accepted"
+      },
+      "Created": {
+        "description": "Resource created",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found"
+      },
+      "NoContent": {
+        "description": "No Content"
+      },
+      "BadRequest": {
+        "description": "Bad Request"
+      },
+      "Unauthorized": {
+        "description": "Unauthorized, Access token is missing or invalid"
+      },
+      "Forbidden": {
+        "description": "Forbidden, the user does not have permission to execute this operation"
+      },
+      "ConflictItemExists": {
+        "description": "Conflict, an item already exists"
+      }
+    },
+    "securitySchemes": {
+      "OpenID": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://example.com/.well-known/openid-configuration"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
